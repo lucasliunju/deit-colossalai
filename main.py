@@ -24,6 +24,7 @@ from samplers import RASampler
 import models
 import utils
 
+import colossalai
 
 def get_args_parser():
     parser = argparse.ArgumentParser('DeiT training and evaluation script', add_help=False)
@@ -169,7 +170,10 @@ def get_args_parser():
 
 
 def main(args):
-    utils.init_distributed_mode(args)
+
+    colossalai.launch_from_torch(config='./config.py')
+
+    # utils.init_distributed_mode(args)
 
     print(args)
 
@@ -228,6 +232,9 @@ def main(args):
         pin_memory=args.pin_mem,
         drop_last=False
     )
+
+    logger = get_dist_logger()
+    logger.info("initialized distributed environment", ranks=[0])
 
     mixup_fn = None
     mixup_active = args.mixup > 0 or args.cutmix > 0. or args.cutmix_minmax is not None
@@ -295,9 +302,12 @@ def main(args):
             resume='')
 
     model_without_ddp = model
-    if args.distributed:
-        model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[args.gpu])
-        model_without_ddp = model.module
+
+
+    # if args.distributed:
+    #     model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[args.gpu])
+    #     model_without_ddp = model.module
+
     n_parameters = sum(p.numel() for p in model.parameters() if p.requires_grad)
     print('number of params:', n_parameters)
 
@@ -365,15 +375,23 @@ def main(args):
         print(f"Accuracy of the network on the {len(dataset_val)} test images: {test_stats['acc1']:.1f}%")
         return
 
+    engine, train_dataloader, test_dataloader, _ = colossalai.initialize(model,
+                                                                          optimizer,
+                                                                          loss_scaler,
+                                                                          data_loader_train)
+
+    # trainer = Trainer(engine=engine, logger=logger)
+
     print(f"Start training for {args.epochs} epochs")
     start_time = time.time()
     max_accuracy = 0.0
     for epoch in range(args.start_epoch, args.epochs):
+        engine.train()
         if args.distributed:
             data_loader_train.sampler.set_epoch(epoch)
 
         train_stats = train_one_epoch(
-            model, criterion, data_loader_train,
+            engine, criterion, data_loader_train,
             optimizer, device, epoch, loss_scaler,
             args.clip_grad, model_ema, mixup_fn,
             set_training_mode=args.finetune == ''  # keep in eval mode during finetuning
