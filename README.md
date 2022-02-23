@@ -1,3 +1,5 @@
+[![logo](Colossal-AI_logo.png)](https://www.colossalai.org/)
+
 # DeiT: Data-efficient Image Transformers
 
 This repository contains PyTorch evaluation code, training code and pretrained models for the following projects:
