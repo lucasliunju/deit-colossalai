@@ -18,15 +18,18 @@ This repository is a DeiT implementation based on colossalai, which is also base
 
 # Usage
 
-First, clone the repository locally:
-```
-git clone https://github.com/facebookresearch/deit.git
-```
-Then, install PyTorch 1.7.0+ and torchvision 0.8.1+ and [pytorch-image-models 0.3.2](https://github.com/rwightman/pytorch-image-models):
+Install PyTorch 1.7.0+ and torchvision 0.8.1+ and [pytorch-image-models 0.3.2](https://github.com/rwightman/pytorch-image-models):
 
 ```
 conda install -c pytorch pytorch torchvision
 pip install timm==0.3.2
+```
+
+Install ColossalAI
+
+```
+pip install colossalai
+
 ```
 
 ## Training
