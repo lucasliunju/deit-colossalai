@@ -382,7 +382,7 @@ def main(args):
 
     engine, train_dataloader, test_dataloader, _ = colossalai.initialize(model,
                                                                           optimizer,
-                                                                          loss_scaler,
+                                                                          criterion,
                                                                           data_loader_train)
 
     # trainer = Trainer(engine=engine, logger=logger)
