@@ -50,7 +50,7 @@ def train_one_epoch(engine: torch.nn.Module, criterion: DistillationLoss,
         # this attribute is added by timm on one optimizer (adahessian)
         is_second_order = hasattr(optimizer, 'is_second_order') and optimizer.is_second_order
         loss_scaler(loss, optimizer, clip_grad=max_norm,
-                    parameters=engine.parameters(), create_graph=is_second_order)
+                    parameters=engine.model.parameters(), create_graph=is_second_order)
 
         torch.cuda.synchronize()
         if model_ema is not None:
