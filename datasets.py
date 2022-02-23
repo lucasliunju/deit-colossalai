@@ -18,7 +18,7 @@ class INatDataset(ImageFolder):
         self.target_transform = target_transform
         self.year = year
         # assert category in ['kingdom','phylum','class','order','supercategory','family','genus','name']
-        path_json = os.path.join(root, f'{"train" if train else "validation"}{year}.json')
+        path_json = os.path.join(root, f'{"train" if train else "val"}{year}.json')
         with open(path_json) as json_file:
             data = json.load(json_file)
 
@@ -60,7 +60,7 @@ def build_dataset(is_train, args):
         dataset = datasets.CIFAR100(args.data_path, train=is_train, transform=transform)
         nb_classes = 100
     elif args.data_set == 'IMNET':
-        root = os.path.join(args.data_path, 'train' if is_train else 'val')
+        root = os.path.join(args.data_path, 'train' if is_train else 'validation')
         dataset = datasets.ImageFolder(root, transform=transform)
         nb_classes = 1000
     elif args.data_set == 'INAT':
