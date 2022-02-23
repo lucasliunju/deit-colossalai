@@ -54,7 +54,7 @@ def train_one_epoch(engine: torch.nn.Module, criterion: DistillationLoss,
 
         torch.cuda.synchronize()
         if model_ema is not None:
-            model_ema.update(engine)
+            model_ema.update(engine.model)
 
         metric_logger.update(loss=loss_value)
         metric_logger.update(lr=optimizer.param_groups[0]["lr"])
