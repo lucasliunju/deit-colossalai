@@ -29,7 +29,6 @@ Install ColossalAI
 
 ```
 pip install colossalai
-
 ```
 
 ## Training
