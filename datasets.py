@@ -18,7 +18,7 @@ class INatDataset(ImageFolder):
         self.target_transform = target_transform
         self.year = year
         # assert category in ['kingdom','phylum','class','order','supercategory','family','genus','name']
-        path_json = os.path.join(root, f'{"train" if train else "val"}{year}.json')
+        path_json = os.path.join(root, f'{"train" if train else "validation"}{year}.json')
         with open(path_json) as json_file:
             data = json.load(json_file)
 
