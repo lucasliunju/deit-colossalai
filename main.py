@@ -392,8 +392,8 @@ def main(args):
     max_accuracy = 0.0
     for epoch in range(args.start_epoch, args.epochs):
         engine.train()
-        if args.distributed:
-            data_loader_train.sampler.set_epoch(epoch)
+        # if args.distributed:
+        #     data_loader_train.sampler.set_epoch(epoch)
 
         train_stats = train_one_epoch(
             engine, criterion, data_loader_train,
